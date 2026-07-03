@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>AI-MiniBoT Pro</title>
+<style>
+:root{
+  --bg:#060810;--card:#0d1421;--b:rgba(0,200,255,.11);--b2:rgba(0,200,255,.26);
+  --ac:#00c8ff;--ac2:#0055ee;--gr:#00e87a;--rd:#ff3050;--or:#ff8800;
+  --pu:#a855f7;--pu2:#7c3aed;--tx:#bdd5ea;--tx2:#4a6a85;--r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:Tahoma,sans-serif;background:var(--bg);color:var(--tx);display:flex;flex-direction:column;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(0,200,255,.018) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(0,200,255,.018) 1px,transparent 1px);background-size:30px 30px;}
+.hdr{flex-shrink:0;background:rgba(6,8,16,.98);padding:10px 14px;display:flex;
+  align-items:center;gap:8px;border-bottom:1px solid var(--b);z-index:20;}
+.logo{font-size:.95rem;font-weight:700;color:var(--ac);}
+.ble-pill{margin-right:auto;display:flex;align-items:center;gap:5px;border-radius:20px;
+  padding:4px 11px;font-size:.68rem;border:1px solid var(--b);
+  background:rgba(168,85,247,.06);cursor:pointer;transition:.2s;color:var(--tx2);}
+.ble-pill.on{border-color:var(--pu);color:var(--pu);}
+.ble-pill:active{transform:scale(.95);}
+.pdot{width:7px;height:7px;border-radius:50%;background:var(--tx2);transition:.3s;flex-shrink:0;}
+.ble-pill.on .pdot{background:var(--pu);box-shadow:0 0 6px var(--pu);}
+.tabs{flex-shrink:0;display:flex;gap:2px;padding:8px 10px;
+  background:rgba(11,16,27,.98);border-bottom:1px solid var(--b);overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{padding:6px 11px;border-radius:7px;cursor:pointer;font-size:.72rem;border:1px solid transparent;
+  white-space:nowrap;transition:.13s;flex-shrink:0;color:var(--tx2);background:none;font-family:Tahoma,sans-serif;}
+.tab.active{background:linear-gradient(135deg,var(--ac2),var(--ac));color:#000;font-weight:700;}
+.tab:not(.active):active{background:rgba(0,200,255,.07);}
+.pages{flex:1;overflow:hidden;position:relative;}
+.page{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  padding:11px 11px 24px;opacity:0;pointer-events:none;-webkit-overflow-scrolling:touch;}
+.page.active{opacity:1;pointer-events:all;}
+.card{background:var(--card);border:1px solid var(--b);border-radius:var(--r);
+  padding:12px;margin-bottom:10px;position:relative;overflow:hidden;}
+.card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--ac),transparent);opacity:.2;}
+.ct{font-size:.72rem;font-weight:700;color:var(--ac);margin-bottom:10px;text-transform:uppercase;letter-spacing:.4px;}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;}
+.stat{background:var(--card);border:1px solid var(--b);border-radius:10px;padding:8px 4px;text-align:center;}
+.sv{font-size:1.15rem;font-weight:700;color:var(--ac);}
+.sl{font-size:.6rem;color:var(--tx2);margin-top:2px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;}
+.btn{background:rgba(255,255,255,.025);border:1px solid var(--b);color:var(--tx);
+  border-radius:10px;padding:10px 6px;cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;gap:3px;font-size:.73rem;font-family:Tahoma,sans-serif;
+  transition:transform .1s,background .13s,border-color .13s;text-align:center;line-height:1.3;width:100%;}
+.btn .i{font-size:1.05rem;}
+.btn:active{transform:scale(.92);}
+.btn.on{background:rgba(0,200,255,.11);border-color:var(--ac);color:var(--ac);}
+.btn.ac{background:linear-gradient(135deg,var(--ac2),var(--ac));color:#000;font-weight:700;border:none;}
+.btn.pu{background:linear-gradient(135deg,var(--pu2),var(--pu));color:#fff;font-weight:700;border:none;}
+.btn.rd{border-color:var(--rd);color:var(--rd);}
+.btn.gr{border-color:var(--gr);color:var(--gr);}
+.eg{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;}
+.eb{background:rgba(255,255,255,.025);border:1px solid var(--b);border-radius:9px;
+  padding:7px 3px;cursor:pointer;text-align:center;transition:.12s;}
+.eb .ei{font-size:1.1rem;display:block;}
+.eb .el{font-size:.55rem;color:var(--tx2);display:block;margin-top:1px;}
+.eb:active{transform:scale(.91);}
+.eb.sel{border-color:var(--ac);background:rgba(0,200,255,.1);}
+.slh{display:flex;justify-content:space-between;font-size:.71rem;color:var(--tx2);margin-bottom:4px;}
+.slv{color:var(--ac);}
+input[type=range]{width:100%;height:5px;-webkit-appearance:none;
+  background:rgba(255,255,255,.06);border-radius:3px;outline:none;cursor:pointer;margin-bottom:2px;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;
+  border-radius:50%;background:linear-gradient(135deg,var(--ac2),var(--ac));cursor:pointer;}
+.rrow{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.rl{font-size:.65rem;color:var(--tx2);width:10px;text-align:center;}
+.rv{font-size:.65rem;color:var(--ac);width:26px;}
+.inp{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--b2);
+  border-radius:10px;color:var(--tx);padding:10px 12px;font-size:.85rem;
+  font-family:Tahoma,sans-serif;outline:none;margin-bottom:7px;transition:border .18s;}
+.inp:focus{border-color:var(--ac);}
+.inp::placeholder{color:#1c3040;}
+.prev{width:100%;height:26px;border-radius:7px;border:1px solid var(--b);margin:8px 0;transition:background .2s;}
+.sbar{height:5px;border-radius:3px;background:rgba(255,255,255,.05);overflow:hidden;margin:3px 0 8px;}
+.sf{height:100%;border-radius:3px;transition:width .25s;}
+.sf.x{background:linear-gradient(90deg,#f55,#f88);}
+.sf.y{background:linear-gradient(90deg,#5f8,#8fa);}
+.sf.z{background:linear-gradient(90deg,#58f,#8af);}
+.tcirc{width:80px;height:80px;border-radius:50%;border:2px solid var(--b);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 8px;
+  font-size:2rem;transition:.25s;background:rgba(255,255,255,.03);}
+.tcirc.on{border-color:var(--gr);background:rgba(0,232,122,.08);
+  box-shadow:0 0 20px rgba(0,232,122,.3);}
+.moodbar{height:6px;border-radius:3px;background:rgba(255,255,255,.06);margin-top:8px;overflow:hidden;}
+.moodfill{height:100%;border-radius:3px;transition:width .4s,background .4s;}
+.wr{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.025);
+  border:1px solid var(--b);border-radius:9px;padding:8px 10px;margin-bottom:7px;font-size:.75rem;}
+.nwrap{display:flex;justify-content:center;margin:8px 0;}
+#neoC{border-radius:9px;border:1px solid var(--b2);display:block;touch-action:none;cursor:crosshair;}
+.cprow{display:flex;gap:8px;align-items:center;margin-top:7px;}
+#cpick{width:44px;height:44px;border-radius:50%;border:2px solid var(--b2);cursor:pointer;padding:0;}
+/* compass */
+.compass-wrap{display:flex;justify-content:center;margin:10px 0 4px;}
+.compass-ring{width:130px;height:130px;border-radius:50%;border:2px solid var(--b2);
+  background:radial-gradient(circle,rgba(0,200,255,.05) 0%,transparent 70%);
+  position:relative;display:flex;align-items:center;justify-content:center;}
+.compass-cross{position:absolute;width:100%;height:100%;}
+.compass-cross::before{content:'';position:absolute;left:50%;top:10%;width:1px;height:80%;
+  background:var(--b2);transform:translateX(-50%);}
+.compass-cross::after{content:'';position:absolute;top:50%;left:10%;height:1px;width:80%;
+  background:var(--b2);transform:translateY(-50%);}
+.compass-dot{position:absolute;width:16px;height:16px;border-radius:50%;
+  background:var(--ac);box-shadow:0 0 12px var(--ac);
+  transform:translate(-50%,-50%);transition:left .15s,top .15s;left:50%;top:50%;}
+.compass-labels{position:absolute;width:100%;height:100%;font-size:.6rem;color:var(--tx2);}
+.calib-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.calib-badge{padding:3px 10px;border-radius:20px;font-size:.67rem;
+  border:1px solid var(--or);color:var(--or);background:rgba(255,136,0,.06);}
+.calib-badge.ok{border-color:var(--gr);color:var(--gr);background:rgba(0,232,122,.06);}
+.tilt-nums{display:flex;justify-content:center;gap:20px;font-size:.8rem;margin-top:4px;}
+.tilt-num{text-align:center;}
+.tilt-num span{display:block;font-size:1.1rem;font-weight:700;color:var(--ac);}
+.tilt-num small{color:var(--tx2);font-size:.65rem;}
+/* BLE overlay */
+.ble-overlay{position:fixed;inset:0;z-index:90;background:rgba(6,8,16,.97);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;padding:28px;transition:opacity .3s;}
+.ble-overlay.hidden{opacity:0;pointer-events:none;}
+.ble-robot{font-size:3.5rem;animation:fl 3s ease-in-out infinite;}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.ble-title{font-size:1.2rem;font-weight:700;color:var(--pu);text-align:center;}
+.ble-sub{font-size:.74rem;color:var(--tx2);text-align:center;line-height:1.7;max-width:300px;}
+.ble-btn{width:100%;max-width:300px;border:none;border-radius:12px;padding:14px;
+  font-size:.95rem;font-family:Tahoma,sans-serif;font-weight:700;cursor:pointer;
+  background:linear-gradient(135deg,var(--pu2),var(--pu));color:#fff;transition:.15s;}
+.ble-btn:active{transform:scale(.97);}
+.ble-btn:disabled{opacity:.6;pointer-events:none;}
+.ble-note{font-size:.67rem;color:var(--tx2);text-align:center;max-width:280px;line-height:1.7;}
+/* conn banner */
+.conn-banner{display:flex;align-items:center;gap:8px;padding:8px 12px;
+  border-radius:9px;margin-bottom:10px;font-size:.73rem;
+  background:rgba(255,80,50,.06);border:1px solid rgba(255,80,50,.2);color:var(--rd);}
+.conn-banner.on{background:rgba(168,85,247,.07);border-color:rgba(168,85,247,.25);color:var(--pu);}
+/* log */
+.log{background:rgba(0,0,0,.2);border:1px solid var(--b);border-radius:9px;
+  padding:8px;height:90px;overflow-y:auto;font-size:.64rem;font-family:monospace;}
+.le{padding:1px 0;border-bottom:1px solid rgba(255,255,255,.025);}
+.le.ok{color:var(--gr);}.le.er{color:var(--rd);}.le.in{color:var(--ac);}.le.bl{color:var(--pu);}
+/* toast */
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%) translateY(12px);
+  background:rgba(11,16,27,.97);border:1px solid var(--b2);color:var(--tx);
+  padding:8px 18px;border-radius:24px;font-size:.76rem;opacity:0;transition:.22s;
+  z-index:99;pointer-events:none;white-space:nowrap;}
+.toast.s{opacity:1;transform:translateX(-50%) translateY(0);}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="logo">🤖 MiniBoT Pro</div>
+  <div class="ble-pill" id="blePill" onclick="showBleOverlay()">
+    <div class="pdot" id="bleDot"></div>
+    <span id="bleTxt">BLE قطع</span>
+  </div>
+</div>
+
+<!-- BLE OVERLAY -->
+<div class="ble-overlay" id="bleOverlay">
+  <div class="ble-robot">🤖</div>
+  <div class="ble-title">📟 اتصال BLE</div>
+  <div class="ble-sub">مطمئن شو ربات روشنه و بلوتوث گوشی فعاله</div>
+  <button class="ble-btn" id="bleScanBtn" onclick="connectBLE()">📟 اسکن و اتصال</button>
+  <div class="ble-note">
+    فقط Chrome پشتیبانی می‌کند<br>
+    اگه دستگاه نمایش داده نشد ربات رو ریستارت کن
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="gt('d',this)">📊 داشبورد</button>
+  <button class="tab" onclick="gt('e',this)">👁 چشم</button>
+  <button class="tab" onclick="gt('n',this)">💡 نور</button>
+  <button class="tab" onclick="gt('s',this)">📡 حسگر</button>
+  <button class="tab" onclick="gt('c',this)">⚙ تنظیمات</button>
+</div>
+
+<div class="pages">
+
+<!-- داشبورد -->
+<div class="page active" id="p-d">
+  <div class="conn-banner" id="connBanner">
+    <span>⚠️</span><span id="connTxt">متصل نیستی — از بالای صفحه وصل شو</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="sv" id="sm">😐</div><div class="sl">حال ربات</div></div>
+    <div class="stat"><div class="sv" id="stilt" style="font-size:.85rem">0°</div><div class="sl">زاویه</div></div>
+    <div class="stat"><div class="sv" id="sup" style="font-size:.85rem">0s</div><div class="sl">آنلاین</div></div>
+  </div>
+  <div class="card">
+    <div class="ct">⚡ چشم سریع</div>
+    <div class="g3">
+      <button class="btn" onclick="se('happy')"><span class="i">😊</span>شاد</button>
+      <button class="btn" onclick="se('sad')"><span class="i">😢</span>غمگین</button>
+      <button class="btn" onclick="se('angry')"><span class="i">😠</span>عصبانی</button>
+      <button class="btn" onclick="se('excited')"><span class="i">🤩</span>هیجان</button>
+      <button class="btn" onclick="se('sleepy')"><span class="i">😴</span>خواب</button>
+      <button class="btn" onclick="se('normal')"><span class="i">😐</span>عادی</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">💡 نور سریع</div>
+    <div class="g3">
+      <button class="btn" onclick="nm('rainbow')"><span class="i">🌈</span>رنگین‌کمان</button>
+      <button class="btn" onclick="nm('pulse')"><span class="i">💓</span>ضربان</button>
+      <button class="btn" onclick="nm('fire')"><span class="i">🔥</span>آتش</button>
+      <button class="btn" onclick="nm('sparkle')"><span class="i">✨</span>جرقه</button>
+      <button class="btn" onclick="nm('meteor')"><span class="i">☄️</span>شهاب</button>
+      <button class="btn" onclick="nm('off')"><span class="i">⬛</span>خاموش</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">🎵 موسیقی</div>
+    <div class="g3">
+      <button class="btn" onclick="send('melody','boot')"><span class="i">🚀</span>بوت</button>
+      <button class="btn" onclick="send('melody','happy')"><span class="i">😊</span>شاد</button>
+      <button class="btn" onclick="send('melody','sad')"><span class="i">😢</span>غمگین</button>
+      <button class="btn" onclick="send('melody','alert')"><span class="i">🚨</span>هشدار</button>
+      <button class="btn" onclick="send('melody','mario')"><span class="i">🎮</span>ماریو</button>
+      <button class="btn" onclick="send('melody','birthday')"><span class="i">🎂</span>تولد</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">🖥 متن روی OLED</div>
+    <input class="inp" id="omsg"  placeholder="خط اول..." type="text">
+    <input class="inp" id="omsg2" placeholder="خط دوم (اختیاری)..." type="text">
+    <div class="g2">
+      <button class="btn ac" onclick="sOled()"><span class="i">📤</span>ارسال</button>
+      <button class="btn" onclick="send('oled_eye','1')"><span class="i">👁</span>برگشت چشم</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">⚙ حالت ربات</div>
+    <div class="g2">
+      <button class="btn" id="btnSleep" onclick="setSleep(1)"><span class="i">😴</span>خواب</button>
+      <button class="btn" onclick="setSleep(0)"><span class="i">⚡</span>بیدار</button>
+      <button class="btn" id="btnAutoOn" onclick="setAuto(1)"><span class="i">🤖</span>خودکار ON</button>
+      <button class="btn" id="btnAutoOff" onclick="setAuto(0)"><span class="i">🔒</span>خودکار OFF</button>
+    </div>
+  </div>
+  <div class="card"><div class="ct">📋 لاگ</div><div class="log" id="lg"></div></div>
+</div>
+
+<!-- چشم -->
+<div class="page" id="p-e">
+  <div class="card">
+    <div class="ct">👁 همه حالت‌های چشم</div>
+    <div class="eg" id="eyeG"></div>
+  </div>
+  <div class="card">
+    <div class="ct">🎬 انیمیشن</div>
+    <div class="g2">
+      <button class="btn" onclick="send('anim','blink')"><span class="i">👁</span>چشمک</button>
+      <button class="btn" onclick="se('normal')"><span class="i">⏹</span>توقف</button>
+    </div>
+  </div>
+</div>
+
+<!-- نور -->
+<div class="page" id="p-n">
+  <div class="card">
+    <div class="ct">💡 حالت نور</div>
+    <div class="g3">
+      <button class="btn" id="nb-solid"   onclick="nm('solid')"><span class="i">⬜</span>ثابت</button>
+      <button class="btn" id="nb-rainbow" onclick="nm('rainbow')"><span class="i">🌈</span>رنگین‌کمان</button>
+      <button class="btn" id="nb-pulse"   onclick="nm('pulse')"><span class="i">💓</span>ضربان</button>
+      <button class="btn" id="nb-chase"   onclick="nm('chase')"><span class="i">🔄</span>تعقیب</button>
+      <button class="btn" id="nb-fire"    onclick="nm('fire')"><span class="i">🔥</span>آتش</button>
+      <button class="btn" id="nb-sparkle" onclick="nm('sparkle')"><span class="i">✨</span>جرقه</button>
+      <button class="btn" id="nb-wave"    onclick="nm('wave')"><span class="i">🌊</span>موج</button>
+      <button class="btn" id="nb-meteor"  onclick="nm('meteor')"><span class="i">☄️</span>شهاب</button>
+      <button class="btn" id="nb-off"     onclick="nm('off')"><span class="i">⬛</span>خاموش</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">🎨 رنگ دلخواه</div>
+    <div class="rrow">
+      <span class="rl" style="color:#f55">R</span>
+      <input type="range" min="0" max="255" value="0" id="rs" oninput="doRgb()">
+      <span class="rv" id="rv">0</span>
+    </div>
+    <div class="rrow">
+      <span class="rl" style="color:#5f8">G</span>
+      <input type="range" min="0" max="255" value="100" id="gs" oninput="doRgb()">
+      <span class="rv" id="gv">100</span>
+    </div>
+    <div class="rrow">
+      <span class="rl" style="color:#58f">B</span>
+      <input type="range" min="0" max="255" value="255" id="bs" oninput="doRgb()">
+      <span class="rv" id="bv">255</span>
+    </div>
+    <div class="prev" id="prev" style="background:rgb(0,100,255)"></div>
+    <div class="slh"><span>روشنایی</span><span class="slv" id="brv">80</span></div>
+    <input type="range" min="10" max="255" value="80" id="brs" oninput="doBri()">
+  </div>
+  <div class="card">
+    <div class="ct">🎨 رنگ سریع</div>
+    <div class="g4">
+      <button class="btn" onclick="qc(255,0,0)"><span class="i">🔴</span>قرمز</button>
+      <button class="btn" onclick="qc(0,255,0)"><span class="i">🟢</span>سبز</button>
+      <button class="btn" onclick="qc(0,0,255)"><span class="i">🔵</span>آبی</button>
+      <button class="btn" onclick="qc(255,255,0)"><span class="i">🟡</span>زرد</button>
+      <button class="btn" onclick="qc(255,0,255)"><span class="i">🟣</span>بنفش</button>
+      <button class="btn" onclick="qc(0,255,255)"><span class="i">🩵</span>فیروزه</button>
+      <button class="btn" onclick="qc(255,140,0)"><span class="i">🟠</span>نارنجی</button>
+      <button class="btn" onclick="qc(255,20,147)"><span class="i">🩷</span>صورتی</button>
+      <button class="btn" onclick="qc(255,255,255)"><span class="i">⚪</span>سفید</button>
+      <button class="btn" onclick="qc(0,255,128)"><span class="i">💚</span>نعنایی</button>
+      <button class="btn" onclick="qc(255,215,0)"><span class="i">✨</span>طلایی</button>
+      <button class="btn" onclick="qc(128,0,128)"><span class="i">🫐</span>ارغوانی</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">🖊 رنگ‌دهی تک LED — در لحظه اعمال میشه</div>
+    <div style="font-size:.69rem;color:var(--tx2);margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+      <span>🎨 رنگ:</span>
+      <input type="color" id="cpick" value="#00ff00" style="width:36px;height:36px;border-radius:50%;border:2px solid var(--b2);cursor:pointer;padding:0;">
+      <span style="flex:1;color:var(--tx2)">انگشت بکش یا روی هر LED بزن</span>
+      <button class="btn rd" style="width:auto;padding:5px 10px;font-size:.68rem" onclick="clearC()">🗑 پاک</button>
+    </div>
+    <div class="nwrap"><canvas id="neoC" width="220" height="220"></canvas></div>
+  </div>
+</div>
+
+<!-- حسگر -->
+<div class="page" id="p-s">
+  <div class="card">
+    <div class="ct">
+      <div class="calib-row">
+        <span>📡 شتاب‌سنج ADXL345</span>
+        <span class="calib-badge" id="calibBadge">کالیبره نشده</span>
+      </div>
+    </div>
+    <div class="compass-wrap">
+      <div class="compass-ring" id="compassRing">
+        <div class="compass-cross"></div>
+        <div class="compass-dot" id="compassDot"></div>
+      </div>
+    </div>
+    <div class="tilt-nums">
+      <div class="tilt-num"><span id="tiltX">0.0°</span><small>زاویه X</small></div>
+      <div class="tilt-num"><span id="tiltY">0.0°</span><small>زاویه Y</small></div>
+      <div class="tilt-num"><span id="tiltMag">0.0</span><small>شدت</small></div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="slh"><span style="color:#f55">X</span><span class="slv" id="ax">0.00 m/s²</span></div>
+      <div class="sbar"><div class="sf x" id="axb" style="width:50%"></div></div>
+      <div class="slh"><span style="color:#5f8">Y</span><span class="slv" id="ay">0.00 m/s²</span></div>
+      <div class="sbar"><div class="sf y" id="ayb" style="width:50%"></div></div>
+      <div class="slh"><span style="color:#58f">Z</span><span class="slv" id="az">0.00 m/s²</span></div>
+      <div class="sbar"><div class="sf z" id="azb" style="width:50%"></div></div>
+    </div>
+    <div style="display:flex;gap:14px;margin-top:6px;font-size:.74rem">
+      <span>لرزش: <strong id="shk" style="color:var(--tx2)">خیر</strong></span>
+    </div>
+    <button class="btn gr" style="width:100%;margin-top:10px" onclick="calibAccel()">
+      <span class="i">🎯</span>کالیبره خودکار (ربات رو صاف نگه‌دار)
+    </button>
+  </div>
+  <div class="card">
+    <div class="ct">🧠 حال ربات</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <span style="font-size:1.8rem" id="moodEmoji">😐</span>
+      <div style="flex:1"><div class="moodbar"><div class="moodfill" id="moodFill" style="width:50%;background:var(--ac)"></div></div></div>
+      <span style="font-size:.82rem;color:var(--ac);font-weight:700" id="moodVal">0</span>
+    </div>
+    <div style="font-size:.7rem;color:var(--tx2);text-align:center">لمس = شادتر | لرزش = ناراحت‌تر</div>
+  </div>
+  <div class="card">
+    <div class="ct">👆 سنسور لمس TTP223</div>
+    <div class="tcirc" id="tc">✋</div>
+    <div style="text-align:center;font-size:.8rem;font-weight:700;margin-top:4px" id="tl">لمس نشده</div>
+    <div style="text-align:center;font-size:.68rem;color:var(--tx2);margin-top:4px" id="touchCount">تعداد لمس: 0</div>
+  </div>
+  <div class="card">
+    <div class="ct">📶 اتصال</div>
+    <div class="wr">📟 BLE: <strong id="bleStatTxt" style="color:var(--tx2)">قطع</strong></div>
+    <div class="wr">🤖 دستگاه: <strong id="bleDevName" style="color:var(--tx2)">-</strong></div>
+  </div>
+</div>
+
+<!-- تنظیمات -->
+<div class="page" id="p-c">
+  <div class="card">
+    <div class="ct">📟 BLE</div>
+    <div class="g2">
+      <button class="btn pu" onclick="connectBLE()"><span class="i">📟</span>اتصال BLE</button>
+      <button class="btn rd" onclick="disconnectBLE()"><span class="i">✖</span>قطع</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">🔊 صدای سفارشی</div>
+    <div class="slh"><span>فرکانس</span><span class="slv" id="fv">1000</span> Hz</div>
+    <input type="range" min="100" max="4000" value="1000" id="fs"
+           oninput="document.getElementById('fv').textContent=this.value" style="margin-bottom:10px">
+    <div class="slh"><span>مدت</span><span class="slv" id="dv">200</span> ms</div>
+    <input type="range" min="50" max="2000" value="200" id="ds"
+           oninput="document.getElementById('dv').textContent=this.value" style="margin-bottom:10px">
+    <div class="g2">
+      <button class="btn ac" onclick="cBeep()"><span class="i">🎵</span>پخش</button>
+      <button class="btn" id="btnMute" onclick="toggleMute()"><span class="i">🔊</span>موت</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">⚙ سیستم</div>
+    <div class="g2">
+      <button class="btn rd" onclick="doRestart()"><span class="i">♻️</span>ریستارت</button>
+      <button class="btn" onclick="send('auto_eye','1')"><span class="i">🤖</span>حالت خودکار</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">ℹ درباره</div>
+    <div style="font-size:.73rem;line-height:2;color:var(--tx2)">
+      📟 BLE: <strong style="color:var(--tx)">AI-MiniBoT Pro</strong><br>
+      🔧 MCU: <strong style="color:var(--tx)">ESP32-C3 Super Mini</strong><br>
+      📌 پین‌های ایمن: <strong style="color:var(--gr)">0,1,3,5,6</strong><br>
+      ❌ ممنوع: <strong style="color:var(--rd)">2,8,9,18,19</strong><br>
+      👁 Irisoled v1.0.2 — UI v2.0
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+const BLE_SVC = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+const BLE_RX  = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+const BLE_TX  = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+
+const S = {
+  bleDevice:null, bleServer:null, bleRxChar:null, bleTxChar:null, bleOk:false,
+  eye:'normal', neoMode:'solid', muted:false,
+  lastEyeClick:0, touchCount:0,
+  // شتاب‌سنج
+  rawAx:0, rawAy:0, rawAz:9.81,
+  offX:0, offY:0, offZ:0,
+  calibrated:false,
+  tiltX:0, tiltY:0,
+};
+
+// ── BLE Overlay ──────────────────────────
+function showBleOverlay() {
+  document.getElementById('bleOverlay').classList.remove('hidden');
+}
+function hideBleOverlay() {
+  document.getElementById('bleOverlay').classList.add('hidden');
+}
+
+async function connectBLE() {
+  if (!navigator.bluetooth) { toast('❌ فقط Chrome'); return; }
+  const btn = document.getElementById('bleScanBtn');
+  btn.textContent = '⏳ در حال اسکن...';
+  btn.disabled = true;
+  try {
+    S.bleDevice = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      optionalServices: [BLE_SVC]
+    });
+    S.bleDevice.addEventListener('gattserverdisconnected', onBleDisconnect);
+    S.bleServer  = await S.bleDevice.gatt.connect();
+    const svc    = await S.bleServer.getPrimaryService(BLE_SVC);
+    S.bleRxChar  = await svc.getCharacteristic(BLE_RX);
+    S.bleTxChar  = await svc.getCharacteristic(BLE_TX);
+    await S.bleTxChar.startNotifications();
+    S.bleTxChar.addEventListener('characteristicvaluechanged', onBleNotify);
+    S.bleOk = true;
+    hideBleOverlay();
+    updateConnUI();
+    lg('BLE متصل: ' + S.bleDevice.name, 'bl');
+    toast('✅ متصل شد: ' + S.bleDevice.name);
+    await bleWrite('status:');
+  } catch(e) {
+    if (e.name !== 'NotFoundError') { toast('❌ ' + e.message); lg('BLE خطا: '+e.message,'er'); }
+  }
+  btn.textContent = '📟 اسکن و اتصال';
+  btn.disabled = false;
+}
+
+function disconnectBLE() {
+  if (S.bleDevice && S.bleDevice.gatt.connected) S.bleDevice.gatt.disconnect();
+  onBleDisconnect();
+}
+
+function onBleDisconnect() {
+  S.bleOk = false; S.bleRxChar = null; S.bleTxChar = null;
+  updateConnUI(); lg('BLE قطع شد','er');
+}
+
+function onBleNotify(e) {
+  const txt = new TextDecoder().decode(e.target.value).trim();
+  parseBleStatus(txt);
+}
+
+function parseBleStatus(txt) {
+  const data = {};
+  txt.split(' ').forEach(p => { const [k,v]=p.split(':'); if(k&&v!==undefined) data[k]=v; });
+
+  if (data.eye && Date.now()-S.lastEyeClick > 2000) updateEyeUI(data.eye);
+  if (data.mood !== undefined) updateMoodUI(parseInt(data.mood));
+  if (data.up)   setTxt('sup', fmtT(parseInt(data.up)));
+  if (data.tilt) setTxt('stilt', parseFloat(data.tilt).toFixed(1)+'°');
+
+  // شتاب‌سنج
+  if (data.ax !== undefined) {
+    S.rawAx = parseFloat(data.ax);
+    S.rawAy = parseFloat(data.ay || 0);
+    S.rawAz = parseFloat(data.az || 9.81);
+    updateAccelUI();
+  }
+
+  // لرزش
+  if (data.shake !== undefined) {
+    const el = document.getElementById('shk');
+    if (el) { el.textContent = data.shake==='Y'?'⚠️ بله':'خیر'; el.style.color = data.shake==='Y'?'var(--or)':'var(--tx2)'; }
+  }
+
+  // لمس
+  if (data.touch !== undefined) {
+    const touched = data.touch === 'Y';
+    const tc = document.getElementById('tc');
+    const tl = document.getElementById('tl');
+    const tcnt = document.getElementById('touchCount');
+    if (tc) {
+      const wasOn = tc.classList.contains('on');
+      tc.classList.toggle('on', touched);
+      // شمارش لمس جدید
+      if (touched && !wasOn) {
+        S.touchCount++;
+        if (tcnt) tcnt.textContent = 'تعداد لمس: ' + S.touchCount;
+      }
+    }
+    if (tl) {
+      tl.textContent = touched ? '✅ لمس شده' : 'لمس نشده';
+      tl.style.color = touched ? 'var(--gr)' : 'var(--tx2)';
+    }
+  }
+}
+
+async function bleWrite(msg) {
+  if (!S.bleOk || !S.bleRxChar) return false;
+  try {
+    await S.bleRxChar.writeValueWithoutResponse(new TextEncoder().encode(msg+'\n'));
+    return true;
+  } catch(e) { lg('BLE write error: '+e.message,'er'); return false; }
+}
+
+// poll هر 2 ثانیه
+setInterval(async () => { if (S.bleOk) await bleWrite('status:'); }, 2000);
+
+// ── Send ──────────────────────────────────
+async function send(k, v) {
+  const ok = await bleWrite(k+':'+String(v));
+  if (!ok) toast('⚠️ ابتدا BLE وصل کن');
+  else lg(k+':'+v, 'bl');
+}
+
+// ── Controls ──────────────────────────────
+function se(name) {
+  S.eye=name; S.lastEyeClick=Date.now();
+  document.querySelectorAll('.eb').forEach(b => b.classList.toggle('sel', b.dataset.e===name));
+  send('eye', name);
+}
+
+function nm(mode) {
+  S.neoMode=mode;
+  document.querySelectorAll('[id^="nb-"]').forEach(b=>b.classList.remove('on'));
+  const el=document.getElementById('nb-'+mode); if(el) el.classList.add('on');
+  send('neo_mode', mode);
+}
+
+let rgbT=null;
+function doRgb() {
+  const r=document.getElementById('rs').value, g=document.getElementById('gs').value, b=document.getElementById('bs').value;
+  document.getElementById('rv').textContent=r;
+  document.getElementById('gv').textContent=g;
+  document.getElementById('bv').textContent=b;
+  document.getElementById('prev').style.background='rgb('+r+','+g+','+b+')';
+  clearTimeout(rgbT);
+  rgbT=setTimeout(()=>{ send('neo_color',r+','+g+','+b); nm('solid'); }, 250);
+}
+
+let briT=null;
+function doBri() {
+  const v=document.getElementById('brs').value;
+  document.getElementById('brv').textContent=v;
+  clearTimeout(briT);
+  briT=setTimeout(()=>send('neo_bri',v), 200);
+}
+
+function qc(r,g,b) {
+  document.getElementById('rs').value=r; document.getElementById('gs').value=g; document.getElementById('bs').value=b;
+  document.getElementById('rv').textContent=r; document.getElementById('gv').textContent=g; document.getElementById('bv').textContent=b;
+  document.getElementById('prev').style.background='rgb('+r+','+g+','+b+')';
+  send('neo_color',r+','+g+','+b); nm('solid');
+}
+
+function sOled() {
+  const l1=document.getElementById('omsg').value.trim(), l2=document.getElementById('omsg2').value.trim();
+  if (!l1) { toast('متن را وارد کن'); return; }
+  send('msg', l1+(l2?'|'+l2:''));
+  toast('پیام ارسال شد ✓');
+}
+
+function setSleep(v) {
+  document.getElementById('btnSleep').classList.toggle('on', v===1);
+  send('sleep', String(v));
+}
+
+function setAuto(v) {
+  document.getElementById('btnAutoOn').classList.toggle('on', v===1);
+  document.getElementById('btnAutoOff').classList.toggle('on', v===0);
+  send('auto_eye', String(v));
+}
+
+let muted=false;
+function toggleMute() {
+  muted=!muted;
+  const btn=document.getElementById('btnMute');
+  btn.querySelector('.i').textContent=muted?'🔇':'🔊';
+  btn.classList.toggle('on',muted);
+  send('beep_toggle','');
+  toast(muted?'صدا خاموش':'صدا روشن');
+}
+
+function cBeep() { send('beep', document.getElementById('fs').value+','+document.getElementById('ds').value); }
+function doRestart() { if(confirm('ریستارت شود؟')) { send('restart',''); toast('در حال ریستارت...'); } }
+
+// ── کالیبراسیون شتاب‌سنج ──────────────────
+function calibAccel() {
+  S.offX = S.rawAx;
+  S.offY = S.rawAy;
+  S.offZ = S.rawAz - 9.81;
+  S.calibrated = true;
+  const badge = document.getElementById('calibBadge');
+  badge.textContent = '✅ کالیبره شده';
+  badge.classList.add('ok');
+  toast('✅ کالیبراسیون انجام شد');
+  updateAccelUI();
+}
+
+function updateAccelUI() {
+  const ax = S.rawAx - S.offX;
+  const ay = S.rawAy - S.offY;
+  const az = S.rawAz - S.offZ;
+
+  S.tiltX = Math.atan2(ax, Math.sqrt(ay*ay+az*az)) * 180/Math.PI;
+  S.tiltY = Math.atan2(ay, Math.sqrt(ax*ax+az*az)) * 180/Math.PI;
+  const mag = Math.sqrt(ax*ax+ay*ay+az*az);
+
+  setTxt('ax', ax.toFixed(2)+' m/s²');
+  setTxt('ay', ay.toFixed(2)+' m/s²');
+  setTxt('az', az.toFixed(2)+' m/s²');
+  setPct('axb', Math.abs(ax)*8+50);
+  setPct('ayb', Math.abs(ay)*8+50);
+  setPct('azb', Math.abs(az)*8+50);
+  setTxt('tiltX', S.tiltX.toFixed(1)+'°');
+  setTxt('tiltY', S.tiltY.toFixed(1)+'°');
+  setTxt('tiltMag', mag.toFixed(2));
+  setTxt('stilt', S.tiltX.toFixed(1)+'°');
+
+  // کمپاس
+  const dot = document.getElementById('compassDot');
+  if (dot) {
+    const cx = 50 + Math.min(40, Math.max(-40, (S.tiltY/90)*40));
+    const cy = 50 + Math.min(40, Math.max(-40, (S.tiltX/90)*40));
+    dot.style.left = cx+'%';
+    dot.style.top  = cy+'%';
+    // رنگ dot بر اساس شیب
+    const tiltTotal = Math.abs(S.tiltX)+Math.abs(S.tiltY);
+    if (tiltTotal < 5)       dot.style.background='var(--gr)';
+    else if (tiltTotal < 30) dot.style.background='var(--or)';
+    else                     dot.style.background='var(--rd)';
+    dot.style.boxShadow='0 0 12px '+dot.style.background;
+  }
+}
+
+// ── Eye Grid ──────────────────────────────
+const EYE_DATA=[
+  {n:'normal',i:'😐',l:'عادی'},{n:'happy',i:'😊',l:'شاد'},{n:'sad',i:'😢',l:'غمگین'},
+  {n:'angry',i:'😠',l:'عصبانی'},{n:'furious',i:'🤬',l:'خشمگین'},{n:'excited',i:'🤩',l:'هیجان'},
+  {n:'surprised',i:'😮',l:'متعجب'},{n:'scared',i:'😨',l:'ترسیده'},{n:'sleepy',i:'😴',l:'خواب'},
+  {n:'bored',i:'😒',l:'خسته'},{n:'focused',i:'🧐',l:'متمرکز'},{n:'worried',i:'😟',l:'نگران'},
+  {n:'despair',i:'😞',l:'ناامید'},{n:'alert',i:'😲',l:'هوشیار'},{n:'disoriented',i:'😵',l:'گیج'},
+  {n:'blink',i:'😑',l:'چشمک'},{n:'blink_up',i:'🙃',l:'چشمک‌بالا'},{n:'blink_down',i:'😶',l:'چشمک‌پایین'},
+  {n:'wink_left',i:'😉',l:'چپ‌چشم'},{n:'wink_right',i:'😉',l:'راست‌چشم'},
+  {n:'look_left',i:'👀',l:'چپ'},{n:'look_right',i:'👀',l:'راست'},
+  {n:'look_up',i:'🙄',l:'بالا'},{n:'look_down',i:'👇',l:'پایین'},
+  {n:'warning',i:'⚠️',l:'هشدار'},
+];
+
+function buildEyes() {
+  const g=document.getElementById('eyeG');
+  EYE_DATA.forEach(e=>{
+    const d=document.createElement('div');
+    d.className='eb'; d.dataset.e=e.n;
+    d.innerHTML='<span class="ei">'+e.i+'</span><span class="el">'+e.l+'</span>';
+    d.addEventListener('click',()=>se(e.n));
+    g.appendChild(d);
+  });
+}
+
+// ── Neo Canvas — ارسال در لحظه ────────────
+function initCanvas() {
+  const cv=document.getElementById('neoC'), ctx=cv.getContext('2d');
+  const SZ=220, COLS=4, CELL=55;
+  let pxColors=new Array(16).fill(null), painting=false;
+  let sendTimer=null;
+
+  function draw() {
+    ctx.clearRect(0,0,SZ,SZ);
+    for(let i=0;i<16;i++){
+      const col=i%COLS, row=Math.floor(i/COLS);
+      const x=col*CELL+3, y=row*CELL+3, w=CELL-6;
+      ctx.fillStyle=pxColors[i]||'#0a1018';
+      if(pxColors[i]){ctx.shadowColor=pxColors[i];ctx.shadowBlur=10;}
+      else ctx.shadowBlur=0;
+      ctx.beginPath(); ctx.roundRect(x,y,w,w,8); ctx.fill();
+      ctx.shadowBlur=0;
+      ctx.strokeStyle='rgba(0,200,255,.15)'; ctx.lineWidth=1; ctx.stroke();
+      // شماره
+      ctx.fillStyle='rgba(255,255,255,.25)';
+      ctx.font='10px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(i, x+w/2, y+w/2);
+    }
+  }
+  draw();
+
+  function getIdx(cx,cy){
+    const r=cv.getBoundingClientRect();
+    const px=(cx-r.left)*SZ/r.width, py=(cy-r.top)*SZ/r.height;
+    const col=Math.floor(px/CELL), row=Math.floor(py/CELL);
+    return(col<0||col>=COLS||row<0||row>=COLS)?-1:row*COLS+col;
+  }
+
+  // ارسال فوری یک پیکسل
+  function sendPixel(idx) {
+    if (idx<0||idx>=16) return;
+    const hex=(pxColors[idx]||'#000000').replace('#','');
+    // فرمت: neo_px1:5,ff0000 (ارسال یک پیکسل در لحظه)
+    send('neo_px1', idx+','+hex);
+  }
+
+  function paint(cx,cy){
+    const idx=getIdx(cx,cy); if(idx<0) return;
+    const newColor=document.getElementById('cpick').value;
+    if(pxColors[idx]===newColor) return; // تغییری نداده، ارسال نکن
+    pxColors[idx]=newColor;
+    draw();
+    // debounce 80ms برای جلوگیری از flood
+    clearTimeout(sendTimer);
+    sendTimer=setTimeout(()=>sendPixel(idx), 80);
+  }
+
+  cv.addEventListener('mousedown', e=>{painting=true; paint(e.clientX,e.clientY);});
+  cv.addEventListener('mousemove', e=>{if(painting) paint(e.clientX,e.clientY);});
+  cv.addEventListener('mouseup',   ()=>painting=false);
+  cv.addEventListener('mouseleave',()=>painting=false);
+  cv.addEventListener('touchstart',e=>{e.preventDefault();painting=true;paint(e.touches[0].clientX,e.touches[0].clientY);},{passive:false});
+  cv.addEventListener('touchmove', e=>{e.preventDefault();if(painting)paint(e.touches[0].clientX,e.touches[0].clientY);},{passive:false});
+  cv.addEventListener('touchend',  ()=>painting=false);
+
+  window.clearC=function(){
+    pxColors=new Array(16).fill(null); draw();
+    send('neo_mode','off');
+    toast('پاک شد');
+  };
+}
+
+// ── UI Helpers ────────────────────────────
+const MOODS=['😞','😟','😒','😐','😐','😐','😊','😊','🤩','🤩','🤩'];
+const MOOD_CLRS=['#f85','#f96','#fa7','#ac8','var(--ac)','var(--ac)','var(--gr)','var(--gr)','#0f8','#0f8','#0f8'];
+
+function updateConnUI(){
+  const pill=document.getElementById('blePill');
+  const dot=document.getElementById('bleDot');
+  const txt=document.getElementById('bleTxt');
+  const stat=document.getElementById('bleStatTxt');
+  const devName=document.getElementById('bleDevName');
+  const ban=document.getElementById('connBanner');
+  const btxt=document.getElementById('connTxt');
+
+  pill.classList.toggle('on',S.bleOk);
+  txt.textContent=S.bleOk?(S.bleDevice?S.bleDevice.name:'BLE ✓'):'BLE قطع';
+  if(stat){stat.textContent=S.bleOk?'✅ متصل':'قطع';stat.style.color=S.bleOk?'var(--pu)':'var(--tx2)';}
+  if(devName) devName.textContent=S.bleOk&&S.bleDevice?S.bleDevice.name:'-';
+
+  if(ban&&btxt){
+    ban.classList.toggle('on',S.bleOk);
+    btxt.textContent=S.bleOk?'📟 متصل از طریق BLE — '+(S.bleDevice?S.bleDevice.name:''):'⚠️ متصل نیستی — روی BLE بزن';
+  }
+}
+
+function updateEyeUI(name){
+  S.eye=name;
+  document.querySelectorAll('.eb').forEach(b=>b.classList.toggle('sel',b.dataset.e===name));
+}
+
+function updateMoodUI(mood){
+  const idx=Math.min(10,Math.max(0,mood+5));
+  const pct=((mood+5)/10)*100;
+  setTxt('sm',MOODS[idx]);
+  setTxt('moodEmoji',MOODS[idx]);
+  setTxt('moodVal',(mood>=0?'+':'')+mood);
+  const mf=document.getElementById('moodFill');
+  if(mf){mf.style.width=pct+'%';mf.style.background=MOOD_CLRS[idx];}
+}
+
+function setTxt(id,val){const e=document.getElementById(id);if(e)e.textContent=val;}
+function setPct(id,val){const e=document.getElementById(id);if(e)e.style.width=Math.min(100,Math.max(2,val))+'%';}
+function fmtT(s){return s<60?s+'s':s<3600?Math.floor(s/60)+'m '+(s%60)+'s':Math.floor(s/3600)+'h '+Math.floor((s%3600)/60)+'m';}
+
+function gt(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+function lg(m,t){
+  t=t||'in';
+  const b=document.getElementById('lg'); if(!b) return;
+  const n=new Date(),ts=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0')+':'+n.getSeconds().toString().padStart(2,'0');
+  const d=document.createElement('div');d.className='le '+t;d.textContent='['+ts+'] '+m;
+  b.insertBefore(d,b.firstChild);while(b.children.length>30)b.removeChild(b.lastChild);
+}
+
+let toastT=null;
+function toast(m){
+  const t=document.getElementById('toast');t.textContent=m;t.classList.add('s');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('s'),2400);
+}
+
+window.addEventListener('DOMContentLoaded',function(){
+  buildEyes();
+  initCanvas();
+  updateConnUI();
+  showBleOverlay();
+  lg('کنترلر v2.0 بارگذاری شد ✓','ok');
+});
+</script>
+</body>
+</html>
